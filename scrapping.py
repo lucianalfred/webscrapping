@@ -1,16 +1,26 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import requests
+import time
 
-response = requests.get("https://www.climatempo.com.br")
-html = response.content
+
+options = Options()
+options.add_argument("--headless")
+driver = webdriver.Chrome(options=options)
+
+
+driver.get("https://www.transfermarkt.pt/statistik/weltrangliste")
+
+
+time.sleep(5)
+
+
+html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 
-temperatura = soup.find("span", {
-    "class": "-text -bold -gray-dark-2 -font-55 _margin-l-15",
-    "id": "current-weather-temperature"
-})
 
+ranking = soup.find("main",id_="tm-main")
 
-print(response.status_code)
-#print(soup.prettify())
-print(temperatura.string)
+print(ranking.text.strip())
+
+driver.quit()
